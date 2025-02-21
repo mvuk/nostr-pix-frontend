@@ -10,6 +10,7 @@
     "buffer": "^6.0.3",
     "html5-qrcode": "^2.3.8",
     "pix-utils": "^2.6.0",
+    "qrcode.react": "^4.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-scripts": "5.0.1",
