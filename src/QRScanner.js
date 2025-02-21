@@ -3,11 +3,13 @@ import { Html5QrcodeScanner } from 'html5-qrcode';
 import { parsePix } from 'pix-utils';
 
 const QRScanner = () => {
-  const [scannedData, setScannedData] = useState(null);
-  const [showConfirmButton, setShowConfirmButton] = useState(false);
+  const [scannedData, setScannedData] = useState(null); // State to store parsed data
+  const [showButtons, setShowButtons] = useState(false); // State to control button visibility
+  const [scanner, setScanner] = useState(null); // State to hold the scanner instance
 
   useEffect(() => {
-    const scanner = new Html5QrcodeScanner('qr-reader', {
+    // Initialize the QR code scanner
+    const qrScanner = new Html5QrcodeScanner('qr-reader', {
       fps: 10,
       qrbox: 250,
     });
@@ -26,34 +28,48 @@ const QRScanner = () => {
         }
 
         setScannedData(parsedData); // Update state with parsed data
-        setShowConfirmButton(true); // Show the "Confirm & Send" button
+        setShowButtons(true); // Show the buttons
+        qrScanner.pause(); // Pause the scanner after a successful scan
       } catch (error) {
         console.error('Error parsing QR code:', error);
         setScannedData({ error: 'Invalid Pix QR code' });
-        setShowConfirmButton(false); // Hide the button if there's an error
+        setShowButtons(false); // Hide the buttons if there's an error
       }
-      scanner.clear(); // Stop the scanner after a successful scan
     };
 
     const onScanError = (err) => {
       console.error('QR scan error:', err);
     };
 
-    scanner.render(onScanSuccess, onScanError);
+    qrScanner.render(onScanSuccess, onScanError);
+    setScanner(qrScanner); // Save the scanner instance to state
 
+    // Cleanup function
     return () => {
-      scanner.clear();
+      qrScanner.clear();
     };
   }, []);
 
   const handleConfirmAndSend = () => {
     console.log('Sending data:', scannedData);
     alert('Data sent successfully!');
+    resetScanner(); // Reset the scanner after sending
+  };
+
+  const handleDiscard = () => {
+    resetScanner(); // Reset the scanner
+  };
+
+  const resetScanner = () => {
+    setScannedData(null); // Clear the scanned data
+    setShowButtons(false); // Hide the buttons
+    if (scanner) {
+      scanner.resume(); // Resume the scanner
+    }
   };
 
   return (
     <div>
-      <h1>Pix Invoice QR Code Scanner</h1>
       <div id="qr-reader" style={{ width: '100%' }}></div>
 
       {/* Display parsed data */}
@@ -62,11 +78,39 @@ const QRScanner = () => {
         <pre>{scannedData ? JSON.stringify(scannedData, null, 2) : 'Scan a QR code to display the data.'}</pre>
       </div>
 
-      {/* Show "Confirm & Send" button if data is parsed */}
-      {showConfirmButton && (
-        <button onClick={handleConfirmAndSend} style={{ marginTop: '20px', padding: '10px 20px', fontSize: '16px' }}>
-          Confirm & Send
-        </button>
+      {/* Show buttons if data is parsed */}
+      {showButtons && (
+        <div style={{ marginTop: '20px' }}>
+          <button
+            onClick={handleDiscard}
+            style={{
+              backgroundColor: 'red',
+              color: 'white',
+              padding: '10px 20px',
+              fontSize: '16px',
+              marginRight: '10px',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+            }}
+          >
+            Discard
+          </button>
+          <button
+            onClick={handleConfirmAndSend}
+            style={{
+              backgroundColor: 'green',
+              color: 'white',
+              padding: '10px 20px',
+              fontSize: '16px',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+            }}
+          >
+            Confirm & Send
+          </button>
+        </div>
       )}
     </div>
   );
