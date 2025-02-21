@@ -6,6 +6,7 @@ const QRScanner = () => {
   const [scannedData, setScannedData] = useState(null); // State to store parsed data
   const [showButtons, setShowButtons] = useState(false); // State to control button visibility
   const [scanner, setScanner] = useState(null); // State to hold the scanner instance
+  const [isScannerVisible, setIsScannerVisible] = useState(true); // State to control scanner visibility
 
   useEffect(() => {
     // Initialize the QR code scanner
@@ -29,6 +30,7 @@ const QRScanner = () => {
 
         setScannedData(parsedData); // Update state with parsed data
         setShowButtons(true); // Show the buttons
+        setIsScannerVisible(false); // Hide the scanner
         qrScanner.pause(); // Pause the scanner after a successful scan
       } catch (error) {
         console.error('Error parsing QR code:', error);
@@ -63,6 +65,7 @@ const QRScanner = () => {
   const resetScanner = () => {
     setScannedData(null); // Clear the scanned data
     setShowButtons(false); // Hide the buttons
+    setIsScannerVisible(true); // Show the scanner
     if (scanner) {
       scanner.resume(); // Resume the scanner
     }
@@ -70,13 +73,30 @@ const QRScanner = () => {
 
   return (
     <div>
-      <div id="qr-reader" style={{ width: '100%' }}></div>
+      {/* <h1>Pix Invoice QR Code Scanner</h1> */}
 
-      {/* Display parsed data */}
-      <div>
-        <h2>Scanned Data:</h2>
-        <pre>{scannedData ? JSON.stringify(scannedData, null, 2) : 'Scan a QR code to display the data.'}</pre>
-      </div>
+      {/* Scanner container */}
+      <div id="qr-reader" style={{ display: isScannerVisible ? 'block' : 'none' }}></div>
+
+      {/* Display parsed data in a user-friendly format */}
+      {scannedData && (
+        <div style={{ marginTop: '20px', fontFamily: 'Arial, sans-serif' }}>
+          <div style={{ backgroundColor: '#222', padding: '20px', borderRadius: '10px' }}>
+            <p style={{ fontSize: '18px', margin: '10px 0' }}>
+              <strong>Transaction Type:</strong> {scannedData.type}
+            </p>
+            <p style={{ fontSize: '36px', margin: '10px 0' }}>
+              <strong>{scannedData.merchantName}</strong>
+            </p>
+            <p style={{ fontSize: '28px', margin: '10px 0' }}>
+              <strong>{scannedData.merchantCity}</strong> 
+            </p>
+            <p style={{ fontSize: '28px', margin: '30px 0 10px 0' }}>
+              <strong>Amount:</strong> R$ {scannedData.transactionAmount}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Show buttons if data is parsed */}
       {showButtons && (
