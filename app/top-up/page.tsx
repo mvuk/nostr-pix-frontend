@@ -8,13 +8,12 @@ import Layout from "@/components/layout";
 import Link from "next/link";
 
 export default function TopUpIntent() {
-  const [amountSats, setAmountSats] = useState("");
+  const [amountSats, setAmountSats] = useState("10000");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const handleTopUp = async () => {
     if (!amountSats) return;
-
     try {
       router.push(`/top-up/payment?amountSats=${amountSats}`);
     } catch (error) {
@@ -26,7 +25,11 @@ export default function TopUpIntent() {
     <Layout>
       <div className="space-y-4">
         <h2 className="text-2xl font-bold">Top Up</h2>
-        {error && <p className="text-red-500">{error}</p>}
+        {error && (
+          <div className="bg-destructive/15 text-destructive px-4 py-3 rounded-lg mb-4">
+            {error}
+          </div>
+        )}
         <Input
           type="number"
           placeholder="Amount (Sats)"

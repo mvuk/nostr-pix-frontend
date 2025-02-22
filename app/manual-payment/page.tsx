@@ -55,7 +55,11 @@ export default function ManualPayment() {
     <Layout>
       <div className="container mx-auto px-4 py-8">
         <h2 className="text-2xl font-bold mb-4">Manual Payment</h2>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+        {error && (
+          <div className="bg-destructive/15 text-destructive px-4 py-3 rounded-lg mb-4">
+            {error}
+          </div>
+        )}
         <div className="space-y-4">
           <div className="flex space-x-2">
             <Input

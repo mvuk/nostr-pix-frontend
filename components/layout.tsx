@@ -1,9 +1,16 @@
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { useAdmin } from "@/hooks/useAdmin";
+import { RefreshCw } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const { adminBalanceBrl, loadingBalance, getAdminDepositQr } = useAdmin();
+  const {
+    adminBalanceBrl,
+    loadingAdminBalance,
+    getAdminDepositQr,
+    refreshAdminBalance,
+  } = useAdmin();
 
   const handleAdminDeposit = async () => {
     const amount = prompt("Enter deposit amount in BRL:");
@@ -29,10 +36,22 @@ export default function Layout({ children }: { children: ReactNode }) {
       <main className="flex-grow container mx-auto px-4 py-8">{children}</main>
       <footer className="bg-secondary text-secondary-foreground p-4">
         <div className="container mx-auto flex justify-between items-center">
-          <p>
-            BRL Available:{" "}
-            {loadingBalance ? "Refreshing..." : Number(adminBalanceBrl)}
-          </p>
+          <div className="flex items-center gap-2">
+            <p>
+              BRL Available:{" "}
+              {loadingAdminBalance ? "Refreshing..." : Number(adminBalanceBrl)}
+            </p>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={refreshAdminBalance}
+              disabled={loadingAdminBalance}
+            >
+              <RefreshCw
+                className={cn("h-4 w-4", loadingAdminBalance && "animate-spin")}
+              />
+            </Button>
+          </div>
           <Button variant="outline" onClick={handleAdminDeposit}>
             Deposit (Admin)
           </Button>

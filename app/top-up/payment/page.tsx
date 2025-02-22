@@ -16,6 +16,9 @@ export default function TopUpPayment() {
   const searchParams = useSearchParams();
   const amountSats = searchParams.get("amountSats");
   const [copyInvoiceText, setCopyInvoiceText] = useState("Copy Invoice");
+  const [error, setError] = useState<string | null>(null);
+  const [checking, setChecking] = useState(false);
+  const [nextCheckIn, setNextCheckIn] = useState(15);
 
   useEffect(() => {
     setUserId(localStorage.getItem("userId"));
@@ -27,13 +30,35 @@ export default function TopUpPayment() {
     }
   }, [amountSats, userId]);
 
+  useEffect(() => {
+    if (!invoice || !userId) return;
+
+    const checkInterval = setInterval(() => {
+      handleCheckPayment();
+      setNextCheckIn(15); // Reset countdown after check
+    }, 15000);
+
+    // Add countdown timer
+    const countdownInterval = setInterval(() => {
+      setNextCheckIn((prev) => Math.max(0, prev - 1));
+    }, 1000);
+
+    return () => {
+      clearInterval(checkInterval);
+      clearInterval(countdownInterval);
+    };
+  }, [invoice, userId, router]);
+
   const generateInvoice = async (userId: string, amountSats: number) => {
     try {
-      const result = await api.generateLightningDeposit(userId, amountSats);
-      setInvoice(result.lnurl);
+      const { lnurl } = await api.generateLightningDeposit(userId, amountSats);
+      setInvoice(lnurl);
     } catch (error) {
-      console.error("Failed to generate invoice:", error);
-      alert("Failed to generate invoice. Please try again.");
+      if ((error as any).message) {
+        setError((error as any).message);
+      } else {
+        setError("Unknown error");
+      }
     } finally {
       setLoadingInvoice(false);
     }
@@ -50,18 +75,23 @@ export default function TopUpPayment() {
   };
 
   const handleCheckPayment = async () => {
-    if (!userId) return;
-
+    setChecking(true);
     try {
-      const result = await api.getLightningDepositStatus(userId, invoice);
-      if (result.paid) {
-        router.push("/success");
-      } else {
-        alert("Payment not received yet. Please try again.");
+      const { paid, amount_sats } = await api.getLightningDepositStatus(
+        userId!,
+        invoice
+      );
+      if (paid) {
+        router.push(`/success?type=lightning&amountSats=${amount_sats}`);
       }
     } catch (error) {
-      console.error("Failed to check payment:", error);
-      alert("Failed to check payment. Please try again.");
+      if ((error as any).message) {
+        setError((error as any).message);
+      } else {
+        setError("Unknown error");
+      }
+    } finally {
+      setChecking(false);
     }
   };
 
@@ -77,6 +107,11 @@ export default function TopUpPayment() {
     <Layout>
       <div className="max-w-md mx-auto space-y-4">
         <h2 className="text-2xl font-bold">Top Up Sats</h2>
+        {error && (
+          <div className="bg-destructive/15 text-destructive px-4 py-3 rounded-lg mb-4">
+            {error}
+          </div>
+        )}
         <div className="aspect-square w-full bg-white p-4 flex items-center justify-center rounded-lg shadow-inner">
           {invoice && (
             <QRCodeSVG
@@ -111,9 +146,18 @@ export default function TopUpPayment() {
             Open in Wallet
           </Button>
         </div>
-        <Button className="w-full" onClick={handleCheckPayment}>
-          Check Payment
-        </Button>
+        <div className="flex flex-col gap-2">
+          <Button
+            className="w-full"
+            onClick={handleCheckPayment}
+            disabled={checking}
+          >
+            {checking ? "Checking Payment..." : "Check Payment Now"}
+          </Button>
+          <p className="text-sm text-center text-muted-foreground">
+            Checking in {nextCheckIn + 1} seconds...
+          </p>
+        </div>
       </div>
     </Layout>
   );

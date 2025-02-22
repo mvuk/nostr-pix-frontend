@@ -5,21 +5,21 @@ import { api } from "@/lib/api";
 
 export function useAdmin() {
   const [adminBalanceBrl, setAdminBalanceBrl] = useState<number | null>(null);
-  const [loadingBalance, setLoadingBalance] = useState(false);
+  const [loadingAdminBalance, setLoadingAdminBalance] = useState(false);
 
   useEffect(() => {
     fetchAdminBalance();
   }, []);
 
   const fetchAdminBalance = async () => {
-    setLoadingBalance(true);
+    setLoadingAdminBalance(true);
     try {
       const { balance_brl } = await api.getAdminBalance();
       setAdminBalanceBrl(balance_brl);
     } catch (error) {
-      console.error("Failed to fetch Brl balance:", error);
+      console.error("Failed to fetch BRL balance:", error);
     } finally {
-      setLoadingBalance(false);
+      setLoadingAdminBalance(false);
     }
   };
 
@@ -36,7 +36,8 @@ export function useAdmin() {
 
   return {
     adminBalanceBrl,
-    loadingBalance,
+    loadingAdminBalance,
     getAdminDepositQr,
+    refreshAdminBalance: fetchAdminBalance,
   };
 }

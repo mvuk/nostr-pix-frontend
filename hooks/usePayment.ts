@@ -10,6 +10,9 @@ export function usePayment() {
     setProcessing(true);
     try {
       return await api.makePixPaymentQR(userId, qrCode);
+    } catch (error) {
+      console.error("Failed to make Pix payment:", error);
+      throw error;
     } finally {
       setProcessing(false);
     }
@@ -23,6 +26,9 @@ export function usePayment() {
     setProcessing(true);
     try {
       return await api.makePixPaymentManual(userId, pixKey, amountBrl);
+    } catch (error) {
+      console.error("Failed to make manual payment:", error);
+      throw error;
     } finally {
       setProcessing(false);
     }
