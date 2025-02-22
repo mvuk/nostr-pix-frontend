@@ -165,10 +165,10 @@ function TopUpPaymentContent() {
 
 export default function TopUpPayment() {
   return (
-    <Layout>
+    <div className="container mx-auto px-4 py-8">
       <Suspense fallback={<div>Loading invoice...</div>}>
         <TopUpPaymentContent />
       </Suspense>
-    </Layout>
+    </div>
   );
 }

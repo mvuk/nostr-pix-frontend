@@ -3,7 +3,6 @@
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import Layout from "@/components/layout";
 import Link from "next/link";
 import { CheckCircle } from "lucide-react";
 
@@ -38,10 +37,10 @@ function SuccessContent() {
 
 export default function Success() {
   return (
-    <Layout>
+    <div className="container mx-auto px-4 py-8">
       <Suspense fallback={<div>Loading...</div>}>
         <SuccessContent />
       </Suspense>
-    </Layout>
+    </div>
   );
 }
