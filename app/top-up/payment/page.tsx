@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Layout from "@/components/layout";
 import { api } from "@/lib/api";
 
 function TopUpPaymentContent() {
@@ -96,79 +95,71 @@ function TopUpPaymentContent() {
   };
 
   if (loadingInvoice) {
-    return (
-      <Layout>
-        <div>Loading invoice...</div>
-      </Layout>
-    );
+    return <div>Loading invoice...</div>;
   }
 
   return (
-    <Layout>
-      <div className="max-w-md mx-auto space-y-4">
-        <h2 className="text-2xl font-bold">Top Up Sats</h2>
-        {error && (
-          <div className="bg-destructive/15 text-destructive px-4 py-3 rounded-lg mb-4">
-            {error}
-          </div>
-        )}
-        <div className="aspect-square w-full bg-white p-4 flex items-center justify-center rounded-lg shadow-inner">
-          {invoice && (
-            <QRCodeSVG
-              value={invoice}
-              size={300}
-              level="H"
-              className="w-full h-full"
-            />
-          )}
+    <div className="max-w-md mx-auto space-y-4">
+      <h2 className="text-2xl font-bold">Top Up Sats</h2>
+      {error && (
+        <div className="bg-destructive/15 text-destructive px-4 py-3 rounded-lg mb-4">
+          {error}
         </div>
-        <div className="bg-muted/50 p-3 rounded-lg">
-          <Input
-            readOnly
+      )}
+      <div className="aspect-square w-full bg-white p-4 flex items-center justify-center rounded-lg shadow-inner">
+        {invoice && (
+          <QRCodeSVG
             value={invoice}
-            className="font-mono text-sm"
-            onClick={handleCopyInvoice}
+            size={300}
+            level="H"
+            className="w-full h-full"
           />
-        </div>
-        <div className="flex justify-between gap-4">
-          <Button
-            variant="outline"
-            className="flex-1 active:scale-95"
-            onClick={handleCopyInvoice}
-          >
-            {copyInvoiceText}
-          </Button>
-          <Button
-            variant="outline"
-            className="flex-1 active:scale-95"
-            onClick={handleOpenWallet}
-          >
-            Open in Wallet
-          </Button>
-        </div>
-        <div className="flex flex-col gap-2">
-          <Button
-            className="w-full"
-            onClick={handleCheckPayment}
-            disabled={checking}
-          >
-            {checking ? "Checking Payment..." : "Check Payment Now"}
-          </Button>
-          <p className="text-sm text-center text-muted-foreground">
-            Checking in {nextCheckIn + 1} seconds...
-          </p>
-        </div>
+        )}
       </div>
-    </Layout>
+      <div className="bg-muted/50 p-3 rounded-lg">
+        <Input
+          readOnly
+          value={invoice}
+          className="font-mono text-sm"
+          onClick={handleCopyInvoice}
+        />
+      </div>
+      <div className="flex justify-between gap-4">
+        <Button
+          variant="outline"
+          className="flex-1 active:scale-95"
+          onClick={handleCopyInvoice}
+        >
+          {copyInvoiceText}
+        </Button>
+        <Button
+          variant="outline"
+          className="flex-1 active:scale-95"
+          onClick={handleOpenWallet}
+        >
+          Open in Wallet
+        </Button>
+      </div>
+      <div className="flex flex-col gap-2">
+        <Button
+          className="w-full"
+          onClick={handleCheckPayment}
+          disabled={checking}
+        >
+          {checking ? "Checking Payment..." : "Check Payment Now"}
+        </Button>
+        <p className="text-sm text-center text-muted-foreground">
+          Checking in {nextCheckIn + 1} seconds...
+        </p>
+      </div>
+    </div>
   );
 }
 
 export default function TopUpPayment() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Suspense fallback={<div>Loading invoice...</div>}>
-        <TopUpPaymentContent />
-      </Suspense>
-    </div>
+    <Suspense fallback={<div>Loading invoice...</div>}>
+      <TopUpPaymentContent />
+    </Suspense>
   );
 }

@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { usePayment } from "@/hooks/usePayment";
 import Link from "next/link";
-import Layout from "@/components/layout";
 
 export default function ManualPayment() {
   const [userId, setUserId] = useState<string | null>(null);
@@ -52,52 +51,50 @@ export default function ManualPayment() {
   };
 
   return (
-    <Layout>
-      <div className="container mx-auto px-4 py-8">
-        <h2 className="text-2xl font-bold mb-4">Manual Payment</h2>
-        {error && (
-          <div className="bg-destructive/15 text-destructive px-4 py-3 rounded-lg mb-4">
-            {error}
-          </div>
-        )}
-        <div className="space-y-4">
-          <div className="flex space-x-2">
-            <Input
-              type="number"
-              placeholder="Amount (BRL)"
-              value={amountBrl}
-              max={150}
-              min={15}
-              onChange={(e) => setAmountBrl(e.target.value)}
-            />
-            <Button onClick={handlePasteAmount}>Paste</Button>
-          </div>
-          <div className="flex space-x-2">
-            <Input
-              placeholder="PIX Key"
-              value={pixKey}
-              onChange={(e) => setPixKey(e.target.value)}
-            />
-            <Button onClick={handlePastePixKey}>Paste</Button>
-          </div>
-          <div className="flex flex-wrap gap-4">
-            <Button
-              onClick={handleSubmit}
-              disabled={
-                processing ||
-                !pixKey ||
-                Number(amountBrl) < 15 ||
-                Number(amountBrl) > 150
-              }
-            >
-              {processing ? "Processing..." : `Pay ${Number(amountBrl)} BRL`}
-            </Button>
-            <Link href="/">
-              <Button variant="outline">Cancel</Button>
-            </Link>
-          </div>
+    <div className="container mx-auto px-4 py-8">
+      <h2 className="text-2xl font-bold mb-4">Manual Payment</h2>
+      {error && (
+        <div className="bg-destructive/15 text-destructive px-4 py-3 rounded-lg mb-4">
+          {error}
+        </div>
+      )}
+      <div className="space-y-4">
+        <div className="flex space-x-2">
+          <Input
+            type="number"
+            placeholder="Amount (BRL)"
+            value={amountBrl}
+            max={150}
+            min={15}
+            onChange={(e) => setAmountBrl(e.target.value)}
+          />
+          <Button onClick={handlePasteAmount}>Paste</Button>
+        </div>
+        <div className="flex space-x-2">
+          <Input
+            placeholder="PIX Key"
+            value={pixKey}
+            onChange={(e) => setPixKey(e.target.value)}
+          />
+          <Button onClick={handlePastePixKey}>Paste</Button>
+        </div>
+        <div className="flex flex-wrap gap-4">
+          <Button
+            onClick={handleSubmit}
+            disabled={
+              processing ||
+              !pixKey ||
+              Number(amountBrl) < 15 ||
+              Number(amountBrl) > 150
+            }
+          >
+            {processing ? "Processing..." : `Pay ${Number(amountBrl)} BRL`}
+          </Button>
+          <Link href="/">
+            <Button variant="outline">Cancel</Button>
+          </Link>
         </div>
       </div>
-    </Layout>
+    </div>
   );
 }
