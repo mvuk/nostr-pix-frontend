@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useAdmin } from "@/hooks/useAdmin";
 import { RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const {
@@ -31,7 +32,9 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="flex flex-col min-h-screen">
       <header className="bg-primary text-primary-foreground p-4">
-        <h1 className="text-2xl font-bold">NostrPIX</h1>
+        <Link href="/">
+          <h1 className="text-2xl font-bold">NostrPIX</h1>
+        </Link>
       </header>
       <main className="flex-grow container mx-auto px-4 py-8">{children}</main>
       <footer className="bg-secondary text-secondary-foreground p-4">
