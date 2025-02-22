@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import Layout from "@/components/layout";
 import { api } from "@/lib/api";
 
-export default function TopUpPayment() {
+function TopUpPaymentContent() {
   const [userId, setUserId] = useState<string | null>(null);
   const [invoice, setInvoice] = useState("");
   const [loadingInvoice, setLoadingInvoice] = useState(true);
@@ -159,6 +159,16 @@ export default function TopUpPayment() {
           </p>
         </div>
       </div>
+    </Layout>
+  );
+}
+
+export default function TopUpPayment() {
+  return (
+    <Layout>
+      <Suspense fallback={<div>Loading invoice...</div>}>
+        <TopUpPaymentContent />
+      </Suspense>
     </Layout>
   );
 }
