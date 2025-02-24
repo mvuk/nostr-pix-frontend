@@ -36,7 +36,29 @@ export default function Layout({ children }: { children: ReactNode }) {
           <h1 className="text-2xl font-bold">NostrPIX</h1>
         </Link>
       </header>
-      <main className="flex-grow container mx-auto px-4 py-8">{children}</main>
+      <main className="flex-grow container mx-auto px-4 py-8">
+        <p className="text-red-500">
+          Warning: NostrPIX is an alpha project built in under 36 hours at a
+          hackathon. <br />
+          <br />
+          Due to high demand, our fiat float is regularly running out,
+          preventing PIX payments even when our users have enough sats.
+          <br />
+          <br />
+          Some users have also reported failed top-ups, which we are
+          investigating.
+          <br />
+          <br />
+          In the meantime, please be cautious and only top up what you need for
+          low-value test purchases. <br />
+          <br />
+          For support, contact @gringokiwi on Telegram, Discord, or X,
+          @gringokiwi.21 on Signal, @OhLucca on Telegram, or @Octavio_Lucca on X
+          <br />
+          <br />
+        </p>
+        {children}
+      </main>
       <footer className="bg-secondary text-secondary-foreground p-4">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
