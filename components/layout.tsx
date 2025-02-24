@@ -53,7 +53,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           low-value test purchases. <br />
           <br />
           For support, contact @gringokiwi on Telegram, Discord, or X,
-          @gringokiwi.21 on Signal, @OhLucca on Telegram, or @Octavio_Lucca on X
+          @gringokiwi.21 on Signal, @Octavio_Lucca on Telegram/X
           <br />
           <br />
         </p>
