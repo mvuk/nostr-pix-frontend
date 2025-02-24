@@ -23,6 +23,8 @@ export default function ManualPayment() {
     if (Number(amountBrl)) {
       if (Number(amountBrl) > 20) {
         setError("Amount must be less than 20 BRL");
+      } elif (Number(amountBrl) < 0) {
+        setError("Amount must be more than 0 BRL");
       } else {
         setError(null);
       }
@@ -62,8 +64,8 @@ export default function ManualPayment() {
             type="number"
             placeholder="Amount (BRL)"
             value={amountBrl}
-            max={150}
-            min={15}
+            max={20}
+            min={0}
             onChange={(e) => setAmountBrl(e.target.value)}
           />
           <Button onClick={handlePasteAmount}>Paste</Button>
@@ -82,8 +84,8 @@ export default function ManualPayment() {
             disabled={
               processing ||
               !pixKey ||
-              Number(amountBrl) < 15 ||
-              Number(amountBrl) > 150
+              Number(amountBrl) < 0 ||
+              Number(amountBrl) > 20
             }
           >
             {processing ? "Processing..." : `Pay ${Number(amountBrl)} BRL`}
