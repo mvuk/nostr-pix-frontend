@@ -21,10 +21,8 @@ export default function ManualPayment() {
 
   useEffect(() => {
     if (Number(amountBrl)) {
-      if (Number(amountBrl) > 150) {
-        setError("Amount must be less than 150 BRL");
-      } else if (Number(amountBrl) < 15) {
-        setError("Amount must be greater than 15 BRL");
+      if (Number(amountBrl) > 20) {
+        setError("Amount must be less than 20 BRL");
       } else {
         setError(null);
       }
