@@ -4,7 +4,7 @@ import { useAdmin } from "@/hooks/useAdmin";
 import { RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-
+import { useUser } from "@/hooks/useUser";
 export default function Layout({ children }: { children: ReactNode }) {
   const {
     adminBalanceBrl,
@@ -12,6 +12,8 @@ export default function Layout({ children }: { children: ReactNode }) {
     getAdminDepositQr,
     refreshAdminBalance,
   } = useAdmin();
+
+  const { userDetails } = useUser();
 
   const handleAdminDeposit = async () => {
     const amount = prompt("Enter deposit amount in BRL:");
@@ -39,23 +41,30 @@ export default function Layout({ children }: { children: ReactNode }) {
       <main className="flex-grow container mx-auto px-4 py-8">
         <p className="text-red-500">
           Warning: NostrPIX is an alpha project built in under 36 hours at a
-          hackathon. <br />
-          <br />
-          Due to high demand, our fiat float is regularly running out,
-          preventing PIX payments even when our users have enough sats.
+          hackathon.
           <br />
           <br />
-          Some users have also reported failed top-ups, which we are
-          investigating.
+          Due to high demand, we are currently unable to process any new top-ups
+          or payments.
           <br />
           <br />
-          In the meantime, please be cautious and only top up what you need for
-          low-value test purchases. <br />
-          <br />
-          For support, contact @gringokiwi on Telegram, Discord, or X,
-          @gringokiwi.21 on Signal, @Octavio_Lucca on Telegram/X
-          <br />
-          <br />
+          {Number(userDetails?.user.balance_sats) > 0 && (
+            <div>
+              You can contact our team for a refund with the following secret
+              code:
+              <br />
+              <b>{userDetails?.user.id}</b>
+              <br />
+              <br />
+              Contact:
+              <br />
+              @gringokiwi on Telegram/Discord/X or @gringokiwi.21 on Signal
+              <br />
+              @Octavio_Lucca on Telegram/X
+              <br />
+              <br />
+            </div>
+          )}
         </p>
         {children}
       </main>

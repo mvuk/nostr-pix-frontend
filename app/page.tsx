@@ -46,7 +46,7 @@ export default function Home() {
               : `${Number(userDetails?.user.balance_sats)} sats`}
           </p>
           <div className="flex flex-wrap gap-2">
-            <Button>
+            <Button disabled>
               <Link href="/top-up">Top Up Sats</Link>
             </Button>
             <Button
@@ -55,10 +55,10 @@ export default function Home() {
             >
               {loadingUserDetails ? "Refreshing..." : "Refresh Balance"}
             </Button>
-            <Button>
+            <Button disabled>
               <Link href="/qr-payment">Pay PIX (QR)</Link>
             </Button>
-            <Button>
+            <Button disabled>
               <Link href="/manual-payment">Pay PIX (Manual)</Link>
             </Button>
             <Button disabled={true}>
