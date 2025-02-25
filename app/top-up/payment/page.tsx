@@ -108,12 +108,14 @@ function TopUpPaymentContent() {
       )}
       <div className="aspect-square w-full bg-white p-4 flex items-center justify-center rounded-lg shadow-inner">
         {invoice && (
-          <QRCodeSVG
-            value={invoice}
-            size={300}
-            level="H"
-            className="w-full h-full"
-          />
+          <a href={`lightning:${invoice}`}>
+            <QRCodeSVG
+              value={invoice}
+              size={300}
+              level="H"
+              className="w-full h-full"
+            />
+          </a>
         )}
       </div>
       <div className="bg-muted/50 p-3 rounded-lg">
