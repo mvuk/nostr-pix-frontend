@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/hooks/useUser";
+import BitcoinPrice from "../components/BitcoinPrice";
 
 export default function Home() {
   const {
@@ -39,6 +40,7 @@ export default function Home() {
         <Button onClick={handleCreateUser}>Create Account</Button>
       ) : (
         <>
+          <BitcoinPrice label="Bitcoin Price:" />
           <p className="text-lg">
             Available Balance:{" "}
             {loadingUserDetails
